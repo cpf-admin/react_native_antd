@@ -1,0 +1,12 @@
+{
+  "name": "react_native_antd",
+  "displayName": "react_native_antd",
+  "expo": {
+    "name": "react_native_antd",
+    "slug": "react_native_antd",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}

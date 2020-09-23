@@ -35,7 +35,7 @@ DerivedData
 build/
 .idea
 .gradle
-local.properties
+
 *.iml
 
 # node.js
@@ -63,3 +63,5 @@ fastlane/screenshots
 
 # CocoaPods
 ios/Pods
+
+android/.gradle/

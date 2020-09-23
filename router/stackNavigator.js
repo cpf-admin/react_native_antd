@@ -1,46 +1,10 @@
 //StackNavigator.js
 import { createStackNavigator } from "react-navigation-stack";
-import {LocaleConfig} from 'react-native-calendars';
 import Menu from '../src/pages/calendars/screens/menu';
 import Calendars from '../src/pages/calendars/screens/calendars';
 import CalendarsList from '../src/pages/calendars/screens/calendarsList';
 import DatepickerTem from '../src/pages/calendars/screens/datepicker';
-
-LocaleConfig.locales['en'] = {
-  formatAccessibilityLabel: 'dddd d \'of\' MMMM \'of\' yyyy',
-  monthNames: [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December'
-  ],
-  monthNamesShort: [
-    'jan',
-    'feb',
-    'mar',
-    'apr',
-    'may',
-    'jun',
-    'jul',
-    'aug',
-    'sep',
-    'oct',
-    'nov',
-    'dec'
-  ],
-  dayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-  dayNamesShort: ['S', 'M', 'T', 'W', 'T', 'F', 'S']
-};
-
-LocaleConfig.defaultLocale = 'en';
+import WeekCalendars from '../src/pages/calendars/screens/weekCalendars'
 
 export default StackNavigator = createStackNavigator(
   {
@@ -58,6 +22,9 @@ export default StackNavigator = createStackNavigator(
     },
     DatepickerTem: {
       screen: DatepickerTem
+    },
+    WeekCalendars: {
+      screen: WeekCalendars
     }
   },
   {

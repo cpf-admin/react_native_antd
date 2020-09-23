@@ -1,8 +1,8 @@
 import React, {useState, Fragment} from 'react';
-import {View} from 'react-native';
-import RNDateTimePicker from '@react-native-community/datetimepicker';
+import {View, Text} from 'react-native';
+// import RNDateTimePicker from '@react-native-community/datetimepicker';
 
-function DatepickerTem () {
+function DrawerDatepicker () {
   const [datetime, setDatetime] = useState(new Date());
   return (<View style={{width: '100%', height: 200, backgroundColor: '#bfbfbf'}}>
         <RNDateTimePicker
@@ -20,4 +20,4 @@ function DatepickerTem () {
   </View>)
 }
 
-export default DatepickerTem;
+export default DrawerDatepicker;

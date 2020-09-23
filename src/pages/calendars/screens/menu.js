@@ -33,6 +33,13 @@ export default class MenuScreen extends Component {
             }}>
             <Text style={styles.menuText}>Datepicker</Text>
           </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.menu}
+            onPress={() => {
+              this.props.navigation.navigate('WeekCalendars')
+            }}>
+            <Text style={styles.menuText}>WeekCalendars</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     );

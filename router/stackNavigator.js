@@ -1,19 +1,67 @@
 //StackNavigator.js
 import { createStackNavigator } from "react-navigation-stack";
-import BottomNavigator from './bottomTabBar';
-import My from '../src/pages/my';
-//类似一个嵌套路由，把底部路由包裹在Stack中
+import {LocaleConfig} from 'react-native-calendars';
+import Menu from '../src/pages/calendars/screens/menu';
+import Calendars from '../src/pages/calendars/screens/calendars';
+import CalendarsList from '../src/pages/calendars/screens/calendarsList';
+import DatepickerTem from '../src/pages/calendars/screens/datepicker';
+
+LocaleConfig.locales['en'] = {
+  formatAccessibilityLabel: 'dddd d \'of\' MMMM \'of\' yyyy',
+  monthNames: [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+  ],
+  monthNamesShort: [
+    'jan',
+    'feb',
+    'mar',
+    'apr',
+    'may',
+    'jun',
+    'jul',
+    'aug',
+    'sep',
+    'oct',
+    'nov',
+    'dec'
+  ],
+  dayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+  dayNamesShort: ['S', 'M', 'T', 'W', 'T', 'F', 'S']
+};
+
+LocaleConfig.defaultLocale = 'en';
+
 export default StackNavigator = createStackNavigator(
   {
-    BottomNavigator:{
-      screen: BottomNavigator
+    Menu:{
+      screen: Menu,
+      navigationOptions:{
+        headerShown: false,
+      }
     },
-    My:{
-      screen: My
+    Calendars:{
+      screen: Calendars
+    },
+    CalendarsList:{
+      screen: CalendarsList
+    },
+    DatepickerTem: {
+      screen: DatepickerTem
     }
   },
   {
-    initialRouteName: 'BottomNavigator', //默认显示底部路由
+    initialRouteName: 'Menu', //默认显示底部路由
     defaultNavigationOptions: { // =>默认的路由全局样式配置
       // headerBackImage: <BackImage />, //=>自定义返回按钮
       headerStyle: {
@@ -22,8 +70,6 @@ export default StackNavigator = createStackNavigator(
       },
       headerTitleStyle: {
         color: '#fff',
-        // textAlign: "center", //用于android 机型标题居中显示
-        // flex: 1
       },
     }
   }

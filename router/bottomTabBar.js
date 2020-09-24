@@ -4,17 +4,17 @@ import {createBottomTabNavigator} from 'react-navigation-tabs';
 import {StyleSheet, Image} from 'react-native';
 
 
-import Life from '../src/pages/life';
+import Home from '../src/pages/home';
 import Koubei from '../src/pages/koubei';
 import Friend from '../src/pages/friend';
 
 //路由所需要用到的图片，选中跟未选中
 const IndexSelected = require("../src/assets/icon/icon-email.png");
-const IndexIcon = require("../src/assets/icon/icon-iphone.png");
+const IndexIcon = require("../src/assets/icon/icon-email-white.png");
 const SystemSelected = require("../src/assets/icon/icon-qq.png");
-const SystemIcon = require("../src/assets/icon/icon-weixin.png");
-const MineSelected = require("../src/assets/icon/logo-qq-broswer.png");
-const MineIcon = require("../src/assets/icon/logo-qq-music.png");
+const SystemIcon = require("../src/assets/icon/icon-qq-white.png");
+const MineSelected = require("../src/assets/icon/icon-weixin.png");
+const MineIcon = require("../src/assets/icon/icon-weixin-white.png");
 
 const styles = StyleSheet.create({
   tabbarImage: {
@@ -24,10 +24,11 @@ const styles = StyleSheet.create({
 })
 
 export default BottomNavigator = createBottomTabNavigator({
-  Life: {
-    screen: Life,
+  Home: {
+    screen: Home,
     navigationOptions: () => ({
-      title: '生活',
+      title: '首页',
+      header: null,
       tabBarIcon: (({ focused }) => {
         return (
           <Image
@@ -68,10 +69,11 @@ export default BottomNavigator = createBottomTabNavigator({
   },
 },
   {
-    initialRouteName: 'Life', //默认显示底部导航的哪个页面
+    initialRouteName: 'Home', //默认显示底部导航的哪个页面
     tabBarOptions: {
       showIcon: true, //是否显示Icon
-      activeTintColor: '#1985EA' //底部选中颜色
+      activeTintColor: '#1985EA', //底部选中颜色
+      inactiveBackgroundColor: '#bfbfbf'
     }
   });
 //这样底部的图标也配置完成了

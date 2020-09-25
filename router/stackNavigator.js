@@ -23,7 +23,7 @@ export default StackNavigator = createStackNavigator(
     }
   },
   {
-    initialRouteName: 'SearchList', //默认显示底部路由
+    initialRouteName: 'BottomNavigator', //默认显示底部路由
     defaultNavigationOptions: { // =>默认的路由全局样式配置
       // headerBackImage: <BackImage />, //=>自定义返回按钮
       headerStyle: {

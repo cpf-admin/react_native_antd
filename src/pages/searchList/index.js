@@ -28,9 +28,6 @@ const playTypeArray = [
     btnName:'单首播放'
   }
 ];
-function getMusicUrl(contentId) {
-  return `https://app.pd.nf.migu.cn/MIGUM2.0/v1.0/content/sub/listenSong.do?toneFlag=HQ&netType=00&userId=15548614588710179085069&ua=Android_migu&version=5.1&copyrightId=0&contentId=${contentId}&resourceType=2&channel=0`
-}
 
 class SearchList extends React.Component {
   constructor (props) {
@@ -47,15 +44,29 @@ class SearchList extends React.Component {
     };
   }
   searchMusicList = _.debounce((keyword) => {
-    httpUtil.get(`https://pd.musicapp.migu.cn/MIGUM3.0/v1.0/content/search_all.do?&ua=Android_migu&version=5.0.1&text=${keyword}&pageNo=1&pageSize=100&searchSwitch={"song":1,"album":0,"singer":0,"tagSong":0,"mvSong":0,"songlist":0,"bestShow":1}`).then(res => {
-      if (res.data && res.data.code === '000000') {
+    httpUtil.get(`https://c.y.qq.com/soso/fcgi-bin/client_search_cp?p=1&n=20&w=${keyword}&format=json`).then(res => {
+    if (res.data && res.data.code === 0) {
         this.setState({
-          songList: res.data.songResultData.result
+          songList: res.data.data.song.list
         })
       }
     })
   }, 500)
 
+  getMusicUrl = (ctx) => {
+    const { songmid, songName, index} = ctx;
+    const that = this;
+    httpUtil.get(`https://u.y.qq.com/cgi-bin/musicu.fcg?format=json&data=%7B%22req_0%22%3A%7B%22module%22%3A%22vkey.GetVkeyServer%22%2C%22method%22%3A%22CgiGetVkey%22%2C%22param%22%3A%7B%22guid%22%3A%22358840384%22%2C%22songmid%22%3A%5B%22${songmid}%22%5D%2C%22songtype%22%3A%5B0%5D%2C%22uin%22%3A%221443481947%22%2C%22loginflag%22%3A1%2C%22platform%22%3A%2220%22%7D%7D%2C%22comm%22%3A%7B%22uin%22%3A%2218585073516%22%2C%22format%22%3A%22json%22%2C%22ct%22%3A24%2C%22cv%22%3A0%7D%7D`).then(res => {
+      if (res.data && res.data.code === 0) {
+        let data = res.data.req_0.data;
+        that.setState({
+          songUrl: data.sip[0] + data.midurlinfo[0].purl,
+          songName,
+          currentIndex: Number(index)
+        })
+      }
+    })
+  }
   
   handlePlay() {
     this.setState({
@@ -65,23 +76,23 @@ class SearchList extends React.Component {
 
   handlePlayPrev(){
     const { songList, currentIndex } = this.state;
-    let _currentIndex = _.cloneDeep(currentIndex);
+    let _currentIndex = currentIndex ? Number(_.cloneDeep(currentIndex)) : 0;
     let ids = _currentIndex === 0 ? 0 : --_currentIndex;
-    this.setState({
-      songUrl: getMusicUrl(songList[ids].contentId),
-      songName: songList[ids].name,
-      currentIndex: ids
+    this.getMusicUrl({
+      songmid: songList[ids].songmid,
+      songName: songList[ids].songname,
+      index: ids
     })
   }
 
   handlePlayNext(){
     const { songList, currentIndex } = this.state;
-    let _currentIndex = _.cloneDeep(currentIndex);
+    let _currentIndex = currentIndex ? Number(_.cloneDeep(currentIndex)) : 0;
     let ids = _currentIndex >= songList.length ? songList.length : ++_currentIndex;
-    this.setState({
-      songUrl: getMusicUrl(songList[ids].contentId),
-      songName: songList[ids].name,
-      currentIndex: ids
+    this.getMusicUrl({
+      songmid: songList[ids].songmid,
+      songName: songList[ids].songname,
+      index: ids
     })
   }
 
@@ -97,15 +108,14 @@ class SearchList extends React.Component {
     const renderItem = (({ item, index }) => {
       return (
         <TouchableOpacity style={currentIndex === index ? styles.itemSelected : styles.item} onPress={() => {
-          this.setState({
-            songUrl: getMusicUrl(item.contentId),
-            songName: item.name,
-            currentIndex: index
-          })
+          this.getMusicUrl({
+            songmid:item.songmid, 
+            songName: item.songname, 
+            index
+          });
         }}>
-          <Image  style={styles.songImg} source={require('../../assets/img/aed2a013f4bebb994cc9de0aa93e26ae.png')} />
-          <Text style={styles.itemName}>{item.name}</Text>
-          <Text style={styles.itemText}>{`作者:${item.singers[0].name}`}</Text>
+          <Text style={styles.itemName}>{item.songname}</Text>
+          <Text style={styles.itemText}>{`歌手:${item.singer[0].name}`}</Text>
         </TouchableOpacity>
       );
     })
@@ -192,17 +202,23 @@ const styles = StyleSheet.create({
   },
   item: {
     flexDirection: 'row',
-    backgroundColor: '#bfbfbf',
-    padding: 10,
-    marginVertical: 8,
-    marginHorizontal: 16,
+    justifyContent: 'space-between',
+    backgroundColor: '#dfdfdf',
+    padding: 5,
+    marginVertical: 4,
+    marginHorizontal: 8,
+    borderRadius: 5,
+    fontSize: 14
   },
   itemSelected: {
     flexDirection: 'row',
-    padding: 10,
-    marginVertical: 8,
-    marginHorizontal: 16,
+    justifyContent: 'space-between',
+    padding: 5,
+    marginVertical: 4,
+    marginHorizontal: 8,
     backgroundColor: '#b78d22',
+    borderRadius: 5,
+    fontSize: 14
   },
   songImg: {
     width: 40,

@@ -1,18 +1,16 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Text, View, Alert, Button, TextInput} from 'react-native';
+import { 
+  ScrollView, 
+  StyleSheet, 
+  Text, 
+  View, 
+  Alert, 
+  Button, 
+  TextInput,
+  TouchableOpacity
+} from 'react-native';
 import _ from 'lodash';
-
-const styles = StyleSheet.create({
-  
-  sInp: {
-    height: 35,
-    borderRadius: 5,
-    borderColor: '#bfbfbf',
-    borderWidth: 1,
-    margin: 10,
-
-  },
-})
+import Album from './components/album';
 
 export default class Home extends React.Component {
   constructor(props) {
@@ -21,12 +19,25 @@ export default class Home extends React.Component {
   render() {
     return (
       <View>
-        <TextInput style={styles.sInp} onFocus={() => {
+        <TouchableOpacity style={styles.sInp} onPress={() => {
           this.props.navigation.navigate('SearchList');
-        }}/>
-
+        }}>
+          <Text>搜搜看哦~</Text>
+        </TouchableOpacity>
+        <Album />
       </View>
        
     );
   }
 }
+
+const styles = StyleSheet.create({
+  sInp: {
+    borderRadius: 10,
+    borderColor: '#bfbfbf',
+    borderWidth: 1,
+    margin: 10,
+    padding: 5,
+    paddingLeft: 15
+  },
+})

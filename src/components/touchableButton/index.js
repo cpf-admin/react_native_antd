@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderStyle: 'solid',
     flexDirection: 'row',
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     alignItems: 'center'
   },
   ms_controll_text: {

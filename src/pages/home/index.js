@@ -3,32 +3,27 @@ import { ScrollView, StyleSheet, Text, View, Alert, Button, TextInput} from 'rea
 import _ from 'lodash';
 
 const styles = StyleSheet.create({
-  searchbox: {
-    justifyContent: 'space-between',
-  },
+  
   sInp: {
-    flex: 4,
-    backgroundColor: 'red',
+    height: 35,
+    borderRadius: 5,
+    borderColor: '#bfbfbf',
+    borderWidth: 1,
+    margin: 10,
+
   },
-  sbtn: {
-    flex: 1,
-  }
 })
 
 export default class Home extends React.Component {
   constructor(props) {
     super(props);
   }
-  
   render() {
     return (
       <View>
-        <View style={styles.searchbox}>
-          <TextInput style={styles.sInp}/>
-          <Button title='搜索' style={styles.sbtn}>搜索</Button>
-        </View>
-
-
+        <TextInput style={styles.sInp} onFocus={() => {
+          this.props.navigation.navigate('SearchList');
+        }}/>
 
       </View>
        

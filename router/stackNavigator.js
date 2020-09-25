@@ -2,18 +2,28 @@
 import { createStackNavigator } from "react-navigation-stack";
 import BottomNavigator from './bottomTabBar';
 import My from '../src/pages/my';
+import SearchList from '../src/pages/searchList';
 //类似一个嵌套路由，把底部路由包裹在Stack中
 export default StackNavigator = createStackNavigator(
   {
     BottomNavigator:{
-      screen: BottomNavigator
+      screen: BottomNavigator,
+      navigationOptions: {
+        headerShown: false,
+      }
     },
     My:{
       screen: My
+    },
+    SearchList: {
+      screen: SearchList,
+      navigationOptions: {
+        title: '搜索列表'
+      }
     }
   },
   {
-    initialRouteName: 'BottomNavigator', //默认显示底部路由
+    initialRouteName: 'SearchList', //默认显示底部路由
     defaultNavigationOptions: { // =>默认的路由全局样式配置
       // headerBackImage: <BackImage />, //=>自定义返回按钮
       headerStyle: {

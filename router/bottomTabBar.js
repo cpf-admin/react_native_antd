@@ -9,12 +9,12 @@ import Koubei from '../src/pages/koubei';
 import Friend from '../src/pages/friend';
 
 //路由所需要用到的图片，选中跟未选中
-const IndexSelected = require("../src/assets/icon/icon-email.png");
-const IndexIcon = require("../src/assets/icon/icon-email-white.png");
+const IndexSelected = require("../src/assets/icon/icon-home.png");
+const IndexIcon = require("../src/assets/icon/icon-home-white.png");
 const SystemSelected = require("../src/assets/icon/icon-qq.png");
 const SystemIcon = require("../src/assets/icon/icon-qq-white.png");
-const MineSelected = require("../src/assets/icon/icon-weixin.png");
-const MineIcon = require("../src/assets/icon/icon-weixin-white.png");
+const MineSelected = require("../src/assets/icon/icon-my.png");
+const MineIcon = require("../src/assets/icon/icon-my-white.png");
 
 const styles = StyleSheet.create({
   tabbarImage: {
@@ -28,7 +28,6 @@ export default BottomNavigator = createBottomTabNavigator({
     screen: Home,
     navigationOptions: () => ({
       title: '首页',
-      header: null,
       tabBarIcon: (({ focused }) => {
         return (
           <Image

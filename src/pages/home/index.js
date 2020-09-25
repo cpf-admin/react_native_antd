@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import _ from 'lodash';
 import Album from './components/album';
+import Top from './components/top';
 
 export default class Home extends React.Component {
   constructor(props) {
@@ -25,19 +26,20 @@ export default class Home extends React.Component {
           <Text>搜搜看哦~</Text>
         </TouchableOpacity>
         <Album />
+        <Top />
       </View>
-       
     );
   }
 }
 
 const styles = StyleSheet.create({
   sInp: {
-    borderRadius: 10,
-    borderColor: '#bfbfbf',
-    borderWidth: 1,
+    padding: 6,
     margin: 10,
-    padding: 5,
-    paddingLeft: 15
+    paddingLeft: 20,
+    backgroundColor: '#dfdfdf',
+    borderRadius: 20,
+    fontSize: 14,
+    color: '#666'
   },
 })

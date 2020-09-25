@@ -1,6 +1,5 @@
 import React from 'react';
 import { 
-  ScrollView, 
   StyleSheet, 
   Text, 
   View, 
@@ -8,7 +7,6 @@ import {
   Image,
   TouchableOpacity,
   Dimensions,
-  TextInput
 } from 'react-native';
 import _ from 'lodash';
 import httpUtil from '../../../../../utils/httpUtil';
@@ -16,47 +14,41 @@ import httpUtil from '../../../../../utils/httpUtil';
 const deviceW = Dimensions.get('window').width;
 const deviceH = Dimensions.get('window').height;
 
-export default class Album extends React.Component {
+export default class TopList extends React.Component {
   constructor(props) {
     super(props);
     this.state={
-      albumList: [],
-      inputValue: '周杰伦'
+      topList: [],
     }
   }
   componentDidMount() {
-    this.getAlbumList('周杰伦');
+    this.getTopList();
   }
 
-  getAlbumList(keyword) {
-    httpUtil.get(`https://c.y.qq.com/soso/fcgi-bin/client_search_cp?p=1&n=9&w=${keyword}&format=json&t=8`).then(res => {
-      if (res.data && res.data.code === 0) {
-        let data = res.data.data.album;
+  getTopList() {
+    httpUtil.get(`https://api.zsfmyz.top/music/top`).then(res => {
+      if (res.data && res.data.code === '0') {
         this.setState({
-          albumList: data.list
+          topList: res.data.data.list && res.data.data.list.length > 21 ? res.data.data.list.slice(0,21) : res.data.data.list
         })
       }
     })
   }
 
-  searchAblumList = _.debounce((keyword) => {
-    this.getAlbumList(keyword);
-  }, 500)
-
   render() {
-    const {albumList, inputValue} = this.state;
+    const {topList} = this.state;
     const renderItem = (({ item, index }) => {
       return (
         <TouchableOpacity style={styles.albumItem} onPress={() => {
           
         }}>
           <View style={styles.imgBox}>
-            <Image style={styles.albumItemImg} source={{uri: item.albumPic}} />
+            <Image style={styles.albumItemImg} source={{uri: item.albumimg}} />
           </View>
           
           <View>
-            <Text style={styles.itemTitle}>{item.albumName.length > 8 ? item.albumName.substring(0, 7) + '...' : item.albumName}</Text>
-            <Text style={styles.itemAuthor}>{item.singerName}</Text>
+            <Text style={styles.itemTitle}>{item.songname.length > 8 ? item.songname.substring(0, 7) + '...' : item.songname}</Text>
+            <Text style={styles.itemAuthor}>{item.singer.name}</Text>
           </View>
         </TouchableOpacity>
       );
@@ -64,22 +56,11 @@ export default class Album extends React.Component {
 
     return (
       <View style={styles.container}>
-        <Text>专辑/{inputValue}</Text>
-        <TextInput 
-          style={styles.tInp}
-          placeholder='可盐可甜的他/她'
-          value={inputValue}
-          onChangeText={(val) => {
-            this.setState({
-              inputValue: val
-            })
-            this.searchAblumList(val);
-          }}
-        />
+        <Text>Top</Text>
         <FlatList
           style={styles.flatBox}
           numColumns={3}
-          data={albumList}
+          data={topList}
           renderItem={renderItem}
           keyExtractor={item => item.id}
         />

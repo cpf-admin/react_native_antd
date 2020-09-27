@@ -6,11 +6,15 @@ import {
   Text, 
   FlatList, 
   TouchableOpacity,
+  Image
 } from 'react-native';
 import _ from 'lodash';
 import TouchableButton from '../../components/touchableButton'
 import httpUtil from '../../../utils/httpUtil';
 import Video from 'react-native-video';
+
+const playUrl = require('../../assets/icon/icon-play.png');
+const loveUrl = require('../../assets/icon/icon-love-white.png');
 
 class AblumList extends React.Component {
   constructor (props) {
@@ -98,6 +102,10 @@ class AblumList extends React.Component {
         }}>
           <Text style={styles.itemName}>{item.songname}</Text>
           <Text style={styles.itemText}>{item.singer.name}</Text>
+          <View style={styles.iconBox}>
+            <Image style={styles.controlIcon} source={playUrl}/>
+            <Image style={styles.controlIcon} source={loveUrl}/>
+          </View>
         </TouchableOpacity>
       );
     })
@@ -209,6 +217,17 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: '#bfbfbf',
   },
+  iconBox: {
+    width: 80,
+    height: 40,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
+  controlIcon: {
+    width: 24,
+    height: 24
+  }
 })
 
 export default AblumList;

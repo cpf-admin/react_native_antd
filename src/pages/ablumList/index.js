@@ -1,10 +1,8 @@
 import React from 'react';
 import { 
   StyleSheet, 
-  ScrollView, 
   View, 
   TextInput, 
-  Image, 
   Text, 
   FlatList, 
   TouchableOpacity,
@@ -14,22 +12,7 @@ import TouchableButton from '../../components/touchableButton'
 import httpUtil from '../../../utils/httpUtil';
 import Video from 'react-native-video';
 
-const playTypeArray = [
-  {
-    iconName:'cycle',
-    btnName:'循环播放'
-  },
-  {
-    iconName:'creative-cloud',
-    btnName:'随机播放'
-  },
-  {
-    iconName:'minus',
-    btnName:'单首播放'
-  }
-];
-
-class SearchList extends React.Component {
+class AblumList extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
@@ -37,14 +20,19 @@ class SearchList extends React.Component {
       songList: [],
       songUrl: null,
       isPaused: false,
-      playType: 0,
       songName: '',
       currentIndex: null
-
     };
   }
+  componentDidMount() {
+    let params = this.props.navigation.state.params;
+    // if (params) {
+    //   this.searchMusicList(params.name);
+    // }
+    this.searchMusicList('周杰伦');
+  }
   searchMusicList = _.debounce((keyword) => {
-    httpUtil.get(`https://api.zsfmyz.top/music/list?p=1&n=10&w=${keyword}`).then(res => {
+    httpUtil.get(`https://api.zsfmyz.top/music/list?p=1&n=20&w=${keyword}`).then(res => {
     if (res.data && res.data.code === "0") {
         this.setState({
           songList: res.data.data.list
@@ -53,90 +41,69 @@ class SearchList extends React.Component {
     })
   }, 500)
 
-  getMusicUrl = (ctx) => {
-    const { songmid, songName, index} = ctx;
-    console.log(songmid);
-    const that = this;
-    httpUtil.get(`https://api.zsfmyz.top/music/song?songmid=${songmid}&guid=126548448`).then(res => {
-    if (res.data && res.data.code === '0') {
-        let data = res.data.data;
-        that.setState({
-          songUrl: data.musicUrl,
-          songName,
-          currentIndex: Number(index)
-        })
-      }
-    })
-  }
+  // getMusicUrl = (ctx) => {
+  //   const { songmid, songName, index} = ctx;
+  //   console.log(songmid);
+  //   const that = this;
+  //   httpUtil.get(`https://api.zsfmyz.top/music/song?songmid=${songmid}&guid=126548448`).then(res => {
+  //   if (res.data && res.data.code === '0') {
+  //       let data = res.data.data;
+  //       that.setState({
+  //         songUrl: data.musicUrl,
+  //         songName,
+  //         currentIndex: Number(index)
+  //       })
+  //     }
+  //   })
+  // }
   
-  handlePlay() {
-    this.setState({
-      isPaused: !this.state.isPaused
-    });
-  }
+  // handlePlay() {
+  //   this.setState({
+  //     isPaused: !this.state.isPaused
+  //   });
+  // }
 
-  handlePlayPrev(){
-    const { songList, currentIndex } = this.state;
-    let _currentIndex = currentIndex ? Number(_.cloneDeep(currentIndex)) : 0;
-    let ids = _currentIndex === 0 ? 0 : --_currentIndex;
-    if (songList[ids]) {
-      this.getMusicUrl({
-        songmid: songList[ids].songmid,
-        songName: songList[ids].songname,
-        index: ids
-      })
-    }
-  }
+  // handlePlayPrev(){
+  //   const { songList, currentIndex } = this.state;
+  //   let _currentIndex = currentIndex ? Number(_.cloneDeep(currentIndex)) : 0;
+  //   let ids = _currentIndex === 0 ? 0 : --_currentIndex;
+  //   if (songList[ids]) {
+  //     this.getMusicUrl({
+  //       songmid: songList[ids].songmid,
+  //       songName: songList[ids].songname,
+  //       index: ids
+  //     })
+  //   }
+  // }
 
-  handlePlayNext(){
-    const { songList, currentIndex } = this.state;
-    let _currentIndex = currentIndex ? Number(_.cloneDeep(currentIndex)) : 0;
-    let ids = _currentIndex >= songList.length ? songList.length : ++_currentIndex;
-    if (songList[ids]) {
-      this.getMusicUrl({
-        songmid: songList[ids].songmid,
-        songName: songList[ids].songname,
-        index: ids
-      })
-    }
-  }
-
-  handleChangePlayType(){
-    const { playType } = this.state;
-    this.setState({
-      playType: playType >= 2 ? 0 : playType + 1
-    })
-  }
+  // handlePlayNext(){
+  //   const { songList, currentIndex } = this.state;
+  //   let _currentIndex = currentIndex ? Number(_.cloneDeep(currentIndex)) : 0;
+  //   let ids = _currentIndex >= songList.length ? songList.length : ++_currentIndex;
+  //   if (songList[ids]) {
+  //     this.getMusicUrl({
+  //       songmid: songList[ids].songmid,
+  //       songName: songList[ids].songname,
+  //       index: ids
+  //     })
+  //   }
+  // }
 
   render() {
-    const {songList, inpValue, songUrl, isPaused, playType, songName, currentIndex} = this.state;
+    const {songList, inpValue, songUrl, isPaused, songName, currentIndex} = this.state;
     const renderItem = (({ item, index }) => {
       return (
         <TouchableOpacity style={currentIndex === index ? styles.itemSelected : styles.item} onPress={() => {
-          this.getMusicUrl({
-            songmid:item.songmid, 
-            songName: item.songname, 
-            index
-          });
+          this.props.navigation.navigate('Player', item)
         }}>
           <Text style={styles.itemName}>{item.songname}</Text>
-          <Text style={styles.itemText}>{`歌手:${item.singer.name}`}</Text>
+          <Text style={styles.itemText}>{item.singer.name}</Text>
         </TouchableOpacity>
       );
     })
     return (
       <View style={{height: '100%'}}>
-        <TextInput 
-          style={styles.sInp} 
-          value={inpValue}
-          onChangeText={(val) => {
-            this.setState({
-              inpValue: val
-            })
-            this.searchMusicList(val);
-          }}
-        />
-        {
+        {/* {
           songUrl ? <Video
               style={styles.video}
               audioOnly
@@ -144,22 +111,15 @@ class SearchList extends React.Component {
               volume={0.5}
               paused={isPaused}
               source={{uri: songUrl}}   // Can be a URL or a local file.
-              // onEnd={this.handleVideoEnd.bind(this)}
-              // onLoad={this.handleVideoLoad.bind(this)}
-              // onLoadStart={this.handleVideoLoadStart.bind(this)}
-              // onTimedMetadata={this.handleVideoTime.bind(this)}
-              // onProgress={this.handleVideoProgress.bind(this)}
-              // onVideoError={this.err.bind(this)}
-              // onError={this.handleVideoError.bind(this)}               // Callback when video cannot be loaded
             /> : null
-        }
+        } */}
         
         <FlatList
           data={songList}
           renderItem={renderItem}
           keyExtractor={item => item.id}
         />
-        <View style={styles.control}>
+        {/* <View style={styles.control}>
           {
             songUrl ? <View >
               <Text style={styles.songName}>{songName}</Text>
@@ -182,15 +142,10 @@ class SearchList extends React.Component {
                 iconName={ 'controller-next'}
                 buttonName='下一首'
               />
-              {/* <TouchableButton
-                onPress={this.handleChangePlayType.bind(this)}
-                iconName={playTypeArray[playType].iconName}
-                buttonName={playTypeArray[playType].btnName}
-              /> */}
             </View> : null
           }
           
-        </View>
+        </View> */}
         
       </View>
     );
@@ -256,5 +211,5 @@ const styles = StyleSheet.create({
   },
 })
 
-export default SearchList;
+export default AblumList;
 

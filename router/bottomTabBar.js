@@ -5,8 +5,10 @@ import {StyleSheet, Image} from 'react-native';
 
 
 import Home from '../src/pages/home';
-import Koubei from '../src/pages/koubei';
-import Friend from '../src/pages/friend';
+import Ablum from '../src/pages/ablumn';
+import Search from '../src/pages/searchList';
+import My from '../src/pages/my';
+// import Friend from '../src/pages/friend';
 
 //路由所需要用到的图片，选中跟未选中
 const IndexSelected = require("../src/assets/icon/icon-home.png");
@@ -15,6 +17,8 @@ const SystemSelected = require("../src/assets/icon/icon-qq.png");
 const SystemIcon = require("../src/assets/icon/icon-qq-white.png");
 const MineSelected = require("../src/assets/icon/icon-my.png");
 const MineIcon = require("../src/assets/icon/icon-my-white.png");
+const SearchSelected = require("../src/assets/icon/icon-search.png");
+const SearchIcon = require("../src/assets/icon/icon-search-white.png");
 
 const styles = StyleSheet.create({
   tabbarImage: {
@@ -27,7 +31,7 @@ export default BottomNavigator = createBottomTabNavigator({
   Home: {
     screen: Home,
     navigationOptions: () => ({
-      title: '首页',
+      title: '最新',
       tabBarIcon: (({ focused }) => {
         return (
           <Image
@@ -38,10 +42,10 @@ export default BottomNavigator = createBottomTabNavigator({
       }),
     })
   },
-  Koubei: {
-    screen: Koubei,
+  Ablum: {
+    screen: Ablum,
     navigationOptions: () => ({
-      title: '口碑',
+      title: '专辑',
       tabBarIcon: (({ focused }) => {
         return (
           <Image
@@ -52,10 +56,24 @@ export default BottomNavigator = createBottomTabNavigator({
       }),
     })
   },
-  Friend: {
-    screen: Friend,
+  Search: {
+    screen: Search,
     navigationOptions: () => ({
-      title: '朋友',
+      title: '搜索',
+      tabBarIcon: (({ focused }) => {
+        return (
+          <Image
+            source={focused ? SearchSelected : SearchIcon}
+            style={styles.tabbarImage}
+          />
+        )
+      }),
+    })
+  },
+  My: {
+    screen: My,
+    navigationOptions: () => ({
+      title: '我的',
       tabBarIcon: (({ focused }) => {
         return (
           <Image
@@ -68,7 +86,7 @@ export default BottomNavigator = createBottomTabNavigator({
   },
 },
   {
-    initialRouteName: 'Home', //默认显示底部导航的哪个页面
+    initialRouteName: 'Ablum', //默认显示底部导航的哪个页面
     tabBarOptions: {
       showIcon: true, //是否显示Icon
       activeTintColor: '#1985EA', //底部选中颜色

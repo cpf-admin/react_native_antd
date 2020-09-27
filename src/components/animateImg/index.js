@@ -38,15 +38,15 @@ class Friend extends Component {
 }
 const styles = StyleSheet.create({
     container:{
-        flex:1,
+        height: 200,
         alignItems:'center',
         justifyContent:'center',
-        backgroundColor:'#00a0e4'
     },
     circle:{
         position:'absolute',
-        width: 300,
-        height: 306
+        width: 150,
+        height: 150,
+        borderRadius: 75
     }
 });
 export default Friend;

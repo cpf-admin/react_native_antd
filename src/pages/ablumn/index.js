@@ -1,5 +1,6 @@
 import React from 'react';
 import { 
+  ScrollView, 
   StyleSheet, 
   Text, 
   View, 
@@ -7,6 +8,7 @@ import {
   Image,
   TouchableOpacity,
   Dimensions,
+  TextInput
 } from 'react-native';
 import _ from 'lodash';
 import httpUtil from '../../../utils/httpUtil';
@@ -14,40 +16,47 @@ import httpUtil from '../../../utils/httpUtil';
 const deviceW = Dimensions.get('window').width;
 const deviceH = Dimensions.get('window').height;
 
-export default class TopList extends React.Component {
+export default class Album extends React.Component {
   constructor(props) {
     super(props);
     this.state={
-      topList: [],
+      albumList: [],
+      inputValue: '周杰伦'
     }
   }
   componentDidMount() {
-    this.getTopList();
+    this.getAlbumList('周杰伦');
   }
 
-  getTopList() {
-    httpUtil.get(`https://api.zsfmyz.top/music/top`).then(res => {
-      if (res.data && res.data.code === '0') {
+  getAlbumList(keyword) {
+    httpUtil.get(`https://c.y.qq.com/soso/fcgi-bin/client_search_cp?p=1&n=50&w=${keyword}&format=json&t=8`).then(res => {
+      if (res.data && res.data.code === 0) {
+        let data = res.data.data.album;
         this.setState({
-          topList: res.data.data.list 
+          albumList: data.list
         })
       }
     })
   }
 
+  searchAblumList = _.debounce((keyword) => {
+    this.getAlbumList(keyword);
+  }, 500)
+
   render() {
-    const {topList} = this.state;
+    const {albumList, inputValue} = this.state;
     const renderItem = (({ item, index }) => {
       return (
         <TouchableOpacity style={styles.albumItem} onPress={() => {
-          this.props.navigation.navigate('Player', item)
+          this.props.navigation.navigate('AblumList', {name: item.singerName})
         }}>
           <View style={styles.imgBox}>
-            <Image style={styles.albumItemImg} source={{uri: item.albumimg}} />
+            <Image style={styles.albumItemImg} source={{uri: item.albumPic}} />
           </View>
+          
           <View>
-            <Text style={styles.itemTitle}>{item.songname.length > 6 ? item.songname.substring(0, 6) + '...' : item.songname}</Text>
-            <Text style={styles.itemAuthor}>{item.singer.name}</Text>
+            <Text style={styles.itemTitle}>{item.albumName.length > 8 ? item.albumName.substring(0, 7) + '...' : item.albumName}</Text>
+            <Text style={styles.itemAuthor}>{item.singerName}</Text>
           </View>
         </TouchableOpacity>
       );
@@ -55,11 +64,22 @@ export default class TopList extends React.Component {
 
     return (
       <View style={styles.container}>
-        <Text>最新Top榜</Text>
+        <Text>专辑/{inputValue}</Text>
+        <TextInput 
+          style={styles.tInp}
+          placeholder='可盐可甜的他/她'
+          value={inputValue}
+          onChangeText={(val) => {
+            this.setState({
+              inputValue: val
+            })
+            this.searchAblumList(val);
+          }}
+        />
         <FlatList
           style={styles.flatBox}
-          numColumns={4}
-          data={topList}
+          numColumns={3}
+          data={albumList}
           renderItem={renderItem}
           keyExtractor={item => item.id}
         />
@@ -88,16 +108,16 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   albumItem: {
-    width: deviceW/4.5,
-    height: 100,
+    width: deviceW/3.5,
+    height: 120,
   },
   imgBox: {
     justifyContent: 'center',
     alignItems: 'center'
   },
   albumItemImg: {
-    width: 60,
-    height: 60,
+    width: 80,
+    height: 80,
   },
   itemTitle:{
     fontSize: 12,

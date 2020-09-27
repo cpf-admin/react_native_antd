@@ -29,7 +29,7 @@ export default class TopList extends React.Component {
     httpUtil.get(`https://api.zsfmyz.top/music/top`).then(res => {
       if (res.data && res.data.code === '0') {
         this.setState({
-          topList: res.data.data.list && res.data.data.list.length > 21 ? res.data.data.list.slice(0,21) : res.data.data.list
+          topList: res.data.data.list 
         })
       }
     })
@@ -40,14 +40,13 @@ export default class TopList extends React.Component {
     const renderItem = (({ item, index }) => {
       return (
         <TouchableOpacity style={styles.albumItem} onPress={() => {
-          
+          this.props.navigation.navigate('Player', item)
         }}>
           <View style={styles.imgBox}>
             <Image style={styles.albumItemImg} source={{uri: item.albumimg}} />
           </View>
-          
           <View>
-            <Text style={styles.itemTitle}>{item.songname.length > 8 ? item.songname.substring(0, 7) + '...' : item.songname}</Text>
+            <Text style={styles.itemTitle}>{item.songname.length > 6 ? item.songname.substring(0, 6) + '...' : item.songname}</Text>
             <Text style={styles.itemAuthor}>{item.singer.name}</Text>
           </View>
         </TouchableOpacity>
@@ -56,10 +55,10 @@ export default class TopList extends React.Component {
 
     return (
       <View style={styles.container}>
-        <Text>Top</Text>
+        <Text>最新Top榜</Text>
         <FlatList
           style={styles.flatBox}
-          numColumns={3}
+          numColumns={4}
           data={topList}
           renderItem={renderItem}
           keyExtractor={item => item.id}
@@ -73,7 +72,7 @@ export default class TopList extends React.Component {
 const styles = StyleSheet.create({
   container: {
     padding: 10,
-    height: 295
+    height: deviceH
   },
   tInp: {
     padding: 3,
@@ -89,16 +88,16 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   albumItem: {
-    width: deviceW/3.5,
-    height: 120,
+    width: deviceW/4.5,
+    height: 100,
   },
   imgBox: {
     justifyContent: 'center',
     alignItems: 'center'
   },
   albumItemImg: {
-    width: 80,
-    height: 80,
+    width: 60,
+    height: 60,
   },
   itemTitle:{
     fontSize: 12,

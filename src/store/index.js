@@ -1,24 +1,13 @@
 import {observable, action} from 'mobx';
 import {AsyncStorage} from 'react-native';
-import {NavigationActions} from 'react-navigation'
+import _ from 'lodash';
 
 import Toast from 'react-native-root-toast';
 
-class Store {
+class DataStore {
   @observable musicCollectList = []; // 歌集列表,用于首页展示
   @observable songsList = []; // songsList组件的音乐列表
-  @observable currentMusic = {}; // 当前播放的音乐
-  @observable currentIndex = 0; // 当前播放音乐的索引
-  @observable uniquePlayer = {}; // 当前Player对象
-  @observable isPaused = true; // 播放器是否暂停 false为播放 true为停止
-  @observable volume = 0.5;
-  @observable process = {}; // 歌曲播放进度 {seekableDuration: 334.262,playableDuration: 334.262,currentTime: 303.356}
-  @observable isVisible = false; // 控制模态框展示与否
-  @observable musicCollectName = ''; // 添加歌集的名称
-  @observable isRefreshing = false; // 下拉刷新状态 目前未用到
-  @observable currentMusicColelct = {}; // 当前点击的音乐播放集
-  @observable isSearch = false; // 是否在搜索音乐
-  @observable playType = 0; // 播放方式  0 为顺序循环播放 1随机播放 2单首播放
+  @observable loveSongList = []; //喜欢的歌曲列表
 
   constructor() {
     console.log('store start');
@@ -29,6 +18,18 @@ class Store {
     const musicCollectList = await AsyncStorage.getItem('musicCollectList');
     this.musicCollectList = musicCollectList ? JSON.parse(musicCollectList) :[];
   };
+
+  @action
+  saveLoveSongList = async (list) => {
+    let loveList = await AsyncStorage.getItem('loveList');
+    loveList = loveList ? JSON.parse(loveList) : [];
+    let _list = _.uniqWith([
+      ...loveList,
+      ...list
+    ], _.isEqual);
+    this.loveSongList = _list;
+    AsyncStorage.setItem('loveList', JSON.stringify(_list));
+  }
 
   @action
   saveSongsList(list) {
@@ -201,6 +202,4 @@ class Store {
 
 }
 
-
-const store = new Store();
-export default store;
+export default DataStore;

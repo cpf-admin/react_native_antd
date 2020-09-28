@@ -4,6 +4,7 @@ import BottomNavigator from './bottomTabBar';
 import My from '../src/pages/my';
 import SearchList from '../src/pages/searchList';
 import AblumList from '../src/pages/ablumList';
+import LoveList from '../src/pages/loveList';
 import Player from '../src/pages/player';
 //类似一个嵌套路由，把底部路由包裹在Stack中
 export default StackNavigator = createStackNavigator(
@@ -32,9 +33,15 @@ export default StackNavigator = createStackNavigator(
         title: '专辑歌曲'
       }
     },
+    LoveList: {
+      screen: LoveList,
+      navigationOptions: {
+        title: '喜欢的音乐'
+      }
+    },
   },
   {
-    initialRouteName: 'AblumList', //默认显示底部路由
+    initialRouteName: 'BottomNavigator', //默认显示底部路由
     defaultNavigationOptions: { // =>默认的路由全局样式配置
       // headerBackImage: <BackImage />, //=>自定义返回按钮
       headerStyle: {

@@ -2,13 +2,14 @@ import React from 'react';
 import { 
   StyleSheet, 
   View, 
-  TextInput, 
   Text, 
   FlatList, 
   TouchableOpacity,
-  Image
+  Image,
+  AsyncStorage
 } from 'react-native';
 import _ from 'lodash';
+import { observer, inject } from 'mobx-react'
 import TouchableButton from '../../components/touchableButton'
 import httpUtil from '../../../utils/httpUtil';
 import Video from 'react-native-video';
@@ -16,6 +17,9 @@ import Video from 'react-native-video';
 const playUrl = require('../../assets/icon/icon-play.png');
 const loveUrl = require('../../assets/icon/icon-love-white.png');
 
+
+@inject('stores')
+@observer
 class AblumList extends React.Component {
   constructor (props) {
     super(props);
@@ -25,7 +29,8 @@ class AblumList extends React.Component {
       songUrl: null,
       isPaused: false,
       songName: '',
-      currentIndex: null
+      currentIndex: null,
+      loveObj: null
     };
   }
   componentDidMount() {
@@ -94,23 +99,55 @@ class AblumList extends React.Component {
   // }
 
   render() {
-    const {songList, inpValue, songUrl, isPaused, songName, currentIndex} = this.state;
+    const {songList, loveObj} = this.state;
     const renderItem = (({ item, index }) => {
       return (
-        <TouchableOpacity style={currentIndex === index ? styles.itemSelected : styles.item} onPress={() => {
-          this.props.navigation.navigate('Player', item)
-        }}>
+        <View style={styles.item}>
           <Text style={styles.itemName}>{item.songname}</Text>
           <Text style={styles.itemText}>{item.singer.name}</Text>
           <View style={styles.iconBox}>
-            <Image style={styles.controlIcon} source={playUrl}/>
-            <Image style={styles.controlIcon} source={loveUrl}/>
+            <TouchableOpacity 
+              onPress={() => {
+                this.props.navigation.navigate('Player', item)
+              }}
+            >
+              <Image style={styles.controlIcon} source={playUrl}/>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                this.setState({
+                  loveObj: {
+                    ...loveObj,
+                    [index]: loveObj && loveObj[index] !== undefined ? !loveObj[index] : true
+                  }
+                }, () => {
+                  let _loveSongList = _.cloneDeep(this.props.stores.loveSongList);
+                  if (this.state.loveObj[index] === false) {
+                    _loveSongList.forEach((_item, _index) => {
+                      if (_item.songmid === item.songmid) {
+                        _loveSongList.splice(_index, 1);
+                      }
+                    })
+                  } else {
+                    _loveSongList = _.uniqWith([
+                      ...this.props.stores.loveSongList,
+                      item
+                    ], _.isEqual)
+                  }
+                  AsyncStorage.setItem('loveList', JSON.stringify(_loveSongList));
+                  this.props.stores.saveLoveSongList(_loveSongList);
+                })
+              }}
+            >
+              <Image style={styles.controlIcon} source={ loveObj && loveObj[index] ? require('../../assets/icon/icon-love.png') : require('../../assets/icon/icon-love-white.png')}/>
+            </TouchableOpacity>
+            
           </View>
-        </TouchableOpacity>
+        </View>
       );
     })
     return (
-      <View style={{height: '100%'}}>
+      <View style={styles.container}>
         {/* {
           songUrl ? <Video
               style={styles.video}
@@ -161,6 +198,9 @@ class AblumList extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    borderColor: '#dfdfdf',
+  },
   sInp: {
     height: 35,
     borderRadius: 5,
@@ -171,7 +211,7 @@ const styles = StyleSheet.create({
   item: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: '#dfdfdf',
+    backgroundColor: '#fff',
     padding: 5,
     marginVertical: 4,
     marginHorizontal: 8,

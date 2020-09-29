@@ -86,7 +86,7 @@ export default BottomNavigator = createBottomTabNavigator({
   },
 },
   {
-    initialRouteName: 'My', //默认显示底部导航的哪个页面
+    initialRouteName: 'Home', //默认显示底部导航的哪个页面
     tabBarOptions: {
       showIcon: true, //是否显示Icon
       activeTintColor: '#1985EA', //底部选中颜色

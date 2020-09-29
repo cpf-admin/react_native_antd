@@ -35,10 +35,9 @@ class AblumList extends React.Component {
   }
   componentDidMount() {
     let params = this.props.navigation.state.params;
-    // if (params) {
-    //   this.searchMusicList(params.name);
-    // }
-    this.searchMusicList('周杰伦');
+    if (params) {
+      this.searchMusicList(params.name);
+    }
   }
   searchMusicList = _.debounce((keyword) => {
     httpUtil.get(`https://api.zsfmyz.top/music/list?p=1&n=20&w=${keyword}`).then(res => {
